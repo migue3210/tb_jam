@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "224749324544",
+    "project_id": "tb-jam",
+    "storage_bucket": "tb-jam.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:224749324544:android:a1546e7574f40bebcecbe5",
+        "android_client_info": {
+          "package_name": "com.tbjam"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "224749324544-lm02d64ca4h2l1htj8te7ibsugeg5ket.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAoZSVyvRiaVldv_KAvXDWkv8IbdPgSA5U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "224749324544-lm02d64ca4h2l1htj8te7ibsugeg5ket.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
