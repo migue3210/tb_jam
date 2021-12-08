@@ -1,8 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'datePicker/date_picker.dart';
 import 'configurations/theme.dart';
+import 'login/login_sreen.dart';
 
 Future<void> main() async {
   runApp(const MyApp());
@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
       supportedLocales: const [
         Locale('es', ''),
       ],
-      home: const DatePicker(),
+      home: const SignInScreen(),
     );
   }
 }

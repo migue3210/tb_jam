@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:224749324544:android:a1546e7574f40bebcecbe5",
+        "mobilesdk_app_id": "1:224749324544:android:3633d5edf5d75ab5cecbe5",
         "android_client_info": {
-          "package_name": "com.tbjam"
+          "package_name": "com.example.tb_jam"
         }
       },
       "oauth_client": [

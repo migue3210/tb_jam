@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:tb_jam/addTask/add_task.dart';
 import 'package:tb_jam/configurations/constants.dart';
+import 'package:tb_jam/drawer/drawer.dart';
 
 import 'components/body.dart';
 
@@ -18,14 +20,26 @@ class _DatePickerState extends State<DatePicker> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xfafafaff),
-      drawer: Drawer(
-        child: Column(),
+      drawer: const Drawer(
+        child: DrawerMenu(),
       ),
       appBar: appBarMethod(context),
       body: Body(
           methodSelectData: (DateTime? value) =>
               setState(() => selectedDate = value!),
           selectedDate: selectedDate),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const AddTask(),
+            ),
+          );
+        },
+        child: const Icon(Icons.add),
+        backgroundColor: Colors.redAccent[100],
+      ),
     );
   }
 
@@ -50,8 +64,8 @@ class _DatePickerState extends State<DatePicker> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: selectedDate,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2025),
+      firstDate: DateTime(2010),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
       initialEntryMode: DatePickerEntryMode.calendar,
       initialDatePickerMode: DatePickerMode.day,
     );
