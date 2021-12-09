@@ -16,6 +16,7 @@ class Authentication {
             await auth.signInWithPopup(authProvider);
 
         user = userCredential.user;
+        // ignore: empty_catches
       } catch (e) {}
     } else {
       final GoogleSignIn googleSignIn = GoogleSignIn();

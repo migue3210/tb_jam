@@ -18,9 +18,10 @@ class _SignInScreenState extends State<SignInScreen> {
         child: FutureBuilder(
           future: Authentication.signInWithGoogle(context: context),
           builder: (context, snapshot) {
-            if (snapshot.hasError) {
+            /* if (!snapshot.hasError) {
               return const Text('Error initializing Firebase');
-            } else if (snapshot.connectionState == ConnectionState.done) {
+            } else */
+            if (snapshot.connectionState == ConnectionState.done) {
               return const GoogleSignInButton();
             }
             return const CircularProgressIndicator(
@@ -49,7 +50,7 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
   Widget build(BuildContext context) {
     return _isSigningIn
         ? const CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
           )
         : ElevatedButton(
             style: ElevatedButton.styleFrom(

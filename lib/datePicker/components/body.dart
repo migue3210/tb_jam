@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:calendar_timeline/calendar_timeline.dart';
+import 'package:intl/intl.dart';
 import 'package:tb_jam/configurations/constants.dart';
 
 class Body extends StatefulWidget {
@@ -19,6 +21,8 @@ class _BodyState extends State<Body> {
   void Function(DateTime? value) get methodSelectData =>
       widget.methodSelectData;
 
+  final ref = FirebaseFirestore.instance.collection('notes');
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -27,37 +31,71 @@ class _BodyState extends State<Body> {
         Expanded(
           child: ScrollConfiguration(
             behavior: MyBehavior(),
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: 10,
-              itemBuilder: (BuildContext context, int index) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 28,
-                    vertical: 2,
-                  ),
-                  child: Column(
-                    children: [
-                      ListTile(
-                        contentPadding: const EdgeInsets.all(0),
-                        onTap: () {},
-                        title: const Text('Título de la Nota'),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [Text('Contenido'), Text('Fecha')],
-                        ),
-                      ),
-                      const Divider(
-                        thickness: 1.0,
-                      )
-                    ],
-                  ),
-                );
-              },
-            ),
+            child: StreamBuilder(
+                stream: ref.snapshots(),
+                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.hasError) {
+                    return const Text('Algo ha salido mal');
+                  } else if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return const Text('Cargando...');
+                  }
+                  final data = snapshot.requireData;
+
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: snapshot.hasData ? data.size : 0,
+                    itemBuilder: (BuildContext context, int index) {
+                      if (snapshot.hasData) {
+                        return cardMethod(data, index);
+                      }
+                      return const Text('No hay tareas pendientes');
+                    },
+                  );
+                }),
           ),
         ),
       ],
+    );
+  }
+
+  Padding cardMethod(QuerySnapshot<Object?> data, int index) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 28,
+        vertical: 2,
+      ),
+      child: (data.docs[index]['date'].toDate() == selectedDate ||
+              DateFormat("dd-MM-yyyy").format(
+                    (selectedDate),
+                  ) ==
+                  DateFormat("dd-MM-yyyy").format(
+                    (data.docs[index]['date']).toDate(),
+                  ))
+          ? Column(
+              children: [
+                ListTile(
+                  contentPadding: const EdgeInsets.all(0),
+                  onTap: () {},
+                  title: Text(data.docs[index]['title']),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(data.docs[index]['description']),
+                      Text(
+                        DateFormat("dd-MM-yyyy").format(
+                          (data.docs[index]['date']).toDate(),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                const Divider(
+                  thickness: 1.0,
+                )
+              ],
+            )
+          : Container(),
     );
   }
 }
