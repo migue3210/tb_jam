@@ -1,44 +1,38 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:calendar_timeline/calendar_timeline.dart';
 import 'package:intl/intl.dart';
 import 'package:tb_jam/configurations/constants.dart';
+import 'package:tb_jam/screens/tasks/editTask/edit_task.dart';
 
 class Body extends StatefulWidget {
-  const Body(
-      {Key? key, required this.selectedDate, required this.methodSelectData})
-      : super(key: key);
-
-  final DateTime selectedDate;
-  final void Function(DateTime? value) methodSelectData;
+  const Body({Key? key}) : super(key: key);
 
   @override
   State<Body> createState() => _BodyState();
 }
 
 class _BodyState extends State<Body> {
-  DateTime get selectedDate => widget.selectedDate;
-  void Function(DateTime? value) get methodSelectData =>
-      widget.methodSelectData;
-
   final ref = FirebaseFirestore.instance.collection('notes');
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Calendar(widget: widget, methodSelectData: methodSelectData),
         Expanded(
           child: ScrollConfiguration(
             behavior: MyBehavior(),
             child: StreamBuilder(
-                stream: ref.snapshots(),
+                stream: ref.orderBy('date', descending: true).snapshots(),
                 builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (snapshot.hasError) {
-                    return const Text('Algo ha salido mal');
+                    return const Center(child: Text('Algo ha salido mal'));
                   } else if (snapshot.connectionState ==
                       ConnectionState.waiting) {
-                    return const Text('Cargando...');
+                    return const Center(child: Text('Cargando...'));
+                  } else if (snapshot.data!.docs
+                          .any((element) => element.get('isDeleted')) ==
+                      false) {
+                    return const Center(child: Text('La papelera está vacía'));
                   }
                   final data = snapshot.requireData;
 
@@ -49,7 +43,7 @@ class _BodyState extends State<Body> {
                       if (snapshot.hasData) {
                         return cardMethod(data, index);
                       }
-                      return const Text('No hay tareas pendientes');
+                      return const SizedBox();
                     },
                   );
                 }),
@@ -65,23 +59,29 @@ class _BodyState extends State<Body> {
         horizontal: 28,
         vertical: 2,
       ),
-      child: (data.docs[index]['date'].toDate() == selectedDate ||
-              DateFormat("dd-MM-yyyy").format(
-                    (selectedDate),
-                  ) ==
-                  DateFormat("dd-MM-yyyy").format(
-                    (data.docs[index]['date']).toDate(),
-                  ))
+      child: (data.docs[index]['isDeleted'] == true)
           ? Column(
               children: [
                 ListTile(
                   contentPadding: const EdgeInsets.all(0),
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            EditTask(docToEdit: data.docs[index]),
+                      ),
+                    );
+                  },
                   title: Text(data.docs[index]['title']),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(data.docs[index]['description']),
+                      Text(
+                        data.docs[index]['description'],
+                        maxLines: 6,
+                        overflow: TextOverflow.fade,
+                      ),
                       Text(
                         DateFormat("dd-MM-yyyy").format(
                           (data.docs[index]['date']).toDate(),
@@ -96,48 +96,6 @@ class _BodyState extends State<Body> {
               ],
             )
           : Container(),
-    );
-  }
-}
-
-class Calendar extends StatelessWidget {
-  const Calendar({
-    Key? key,
-    required this.widget,
-    required this.methodSelectData,
-  }) : super(key: key);
-
-  final Body widget;
-  final void Function(DateTime? value) methodSelectData;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(30),
-          bottomRight: Radius.circular(30),
-        ),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          CalendarTimeline(
-            initialDate: widget.selectedDate,
-            firstDate: DateTime(2010),
-            lastDate: DateTime(2025),
-            onDateSelected: (date) => methodSelectData(date),
-            leftMargin: 20,
-            dayColor: Colors.teal[200],
-            dayNameColor: Colors.white,
-            activeDayColor: Colors.white,
-            activeBackgroundDayColor: Colors.redAccent[100],
-            dotsColor: const Color(0xFF333A47),
-          ),
-          const SizedBox(height: 25)
-        ],
-      ),
     );
   }
 }

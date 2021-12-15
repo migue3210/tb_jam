@@ -22,43 +22,49 @@ class _BodyState extends State<Body> {
       key: _formKey,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 28),
-        child: Column(
-          children: [
-            TextFormField(
-              textAlignVertical: TextAlignVertical.center,
-              readOnly: true,
-              onTap: () => buildMaterialDatePicker(context),
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                prefixIcon: const Icon(Icons.calendar_today),
-                hintText: DateFormat("dd-MM-yyyy").format(selectedDate),
-                hintStyle: const TextStyle(fontWeight: FontWeight.w600),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              CustomTextFormField(
+                  hint: 'Título',
+                  hintStyle: const TextStyle(fontSize: 26),
+                  controller: title,
+                  action: TextInputAction.next,
+                  contentPadding: const EdgeInsets.symmetric(vertical: 0)),
+              TextFormField(
+                textAlignVertical: TextAlignVertical.center,
+                readOnly: true,
+                onTap: () => buildMaterialDatePicker(context),
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: DateFormat.yMMMMd("es").format(selectedDate),
+                  hintStyle: const TextStyle(fontWeight: FontWeight.w600),
+                  suffixIcon: const Icon(
+                    Icons.edit,
+                    color: Colors.blue,
+                  ),
+                ),
               ),
-            ),
-            CustomTextFormField(
-              hint: 'Título',
-              hintStyle: const TextStyle(fontSize: 26),
-              controller: title,
-              action: TextInputAction.next,
-            ),
-            CustomTextFormField(
-              hint: 'Escribe algo...',
-              controller: description,
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                ref.add({
-                  'date': selectedDate,
-                  'title': title.text,
-                  'description': description.text,
-                  'createdAt': DateTime.now(),
-                }).whenComplete(() => Navigator.pop(context));
-              },
-              child: const Text('Crear Tarea'),
-              style: ElevatedButton.styleFrom(primary: Colors.redAccent[100]),
-            )
-          ],
+              CustomTextFormField(
+                hint: 'Escribe algo...',
+                controller: description,
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  ref.add({
+                    'date': selectedDate,
+                    'title': title.text,
+                    'description': description.text,
+                    'createdAt': DateTime.now(),
+                    'isDeleted': false,
+                  }).whenComplete(() => Navigator.pop(context));
+                },
+                child: const Text('Crear Tarea'),
+                style: ElevatedButton.styleFrom(primary: Colors.redAccent[100]),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -92,6 +98,7 @@ class CustomTextFormField extends StatelessWidget {
     this.decoration,
     this.hint,
     this.hintStyle,
+    this.contentPadding,
   }) : super(key: key);
   final TextEditingController? controller;
   final String? hint;
@@ -101,6 +108,7 @@ class CustomTextFormField extends StatelessWidget {
   final Icon? icon;
   final InputDecoration? decoration;
   final TextStyle? hintStyle;
+  final EdgeInsetsGeometry? contentPadding;
 
   @override
   Widget build(BuildContext context) {
@@ -111,8 +119,11 @@ class CustomTextFormField extends StatelessWidget {
       onFieldSubmitted: onFieldSubmitted,
       onTap: onTap,
       textAlignVertical: TextAlignVertical.center,
+      maxLines: null,
+      // keyboardType: TextInputType.multiline,
       decoration: decoration ??
           InputDecoration(
+            contentPadding: contentPadding,
             hintText: hint ?? "",
             hintStyle: hintStyle,
             prefixIcon: icon,

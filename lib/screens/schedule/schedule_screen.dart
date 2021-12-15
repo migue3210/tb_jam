@@ -1,28 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:tb_jam/addTask/add_task.dart';
 import 'package:tb_jam/configurations/constants.dart';
 import 'package:tb_jam/drawer/drawer.dart';
+import 'package:tb_jam/screens/tasks/addTask/add_task.dart';
 
 import 'components/body.dart';
 
-class DatePicker extends StatefulWidget {
-  const DatePicker({Key? key}) : super(key: key);
+class ScheduleScreen extends StatefulWidget {
+  const ScheduleScreen({Key? key}) : super(key: key);
 
   @override
-  _DatePickerState createState() => _DatePickerState();
+  _ScheduleScreenState createState() => _ScheduleScreenState();
 }
 
-class _DatePickerState extends State<DatePicker> {
+class _ScheduleScreenState extends State<ScheduleScreen> {
   DateTime selectedDate = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xfafafaff),
-      drawer: const Drawer(
-        child: DrawerMenu(),
-      ),
+      drawer: const DrawerMenu(),
       appBar: appBarMethod(context),
       body: Body(
           methodSelectData: (DateTime? value) =>

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 ThemeData theme(context) {
   return ThemeData(
-    scaffoldBackgroundColor: const Color(0xfffafafa),
+    scaffoldBackgroundColor: const Color(0xfafafaff),
     fontFamily: 'Roboto',
     textTheme: textTheme(),
     appBarTheme: appBarTheme(context),
