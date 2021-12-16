@@ -1,29 +1,50 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:tb_jam/configurations/constants.dart';
 
 class Body extends StatefulWidget {
-  const Body({Key? key}) : super(key: key);
+  const Body({
+    Key? key,
+    required this.title,
+    required this.description,
+    required this.selectedDate,
+    required this.selectedDateMethod,
+    required this.listOfFields,
+    required this.addNewField,
+  }) : super(key: key);
 
+  final TextEditingController title;
+  final TextEditingController description;
+  final DateTime selectedDate;
+  final void Function(DateTime? value) selectedDateMethod;
+  final List listOfFields;
+
+  final void Function() addNewField;
   @override
   State<Body> createState() => _BodyState();
 }
 
 class _BodyState extends State<Body> {
+  TextEditingController get title => widget.title;
+  TextEditingController get description => widget.description;
+  DateTime get selectedDate => widget.selectedDate;
+  void Function(DateTime? value) get selectedDateMethod =>
+      widget.selectedDateMethod;
+  void Function() get addNewField => widget.addNewField;
+  List get listOfFields => widget.listOfFields;
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController title = TextEditingController();
-  final TextEditingController description = TextEditingController();
-  CollectionReference ref = FirebaseFirestore.instance.collection('notes');
-  DateTime selectedDate = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
+    bool value = false;
     return Form(
       key: _formKey,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 28),
-        child: SingleChildScrollView(
-          child: Column(
+        child: ScrollConfiguration(
+          behavior: MyBehavior(),
+          child: ListView(
             children: [
               CustomTextFormField(
                   hint: 'Título',
@@ -50,19 +71,33 @@ class _BodyState extends State<Body> {
                 controller: description,
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  ref.add({
-                    'date': selectedDate,
-                    'title': title.text,
-                    'description': description.text,
-                    'createdAt': DateTime.now(),
-                    'isDeleted': false,
-                  }).whenComplete(() => Navigator.pop(context));
-                },
-                child: const Text('Crear Tarea'),
-                style: ElevatedButton.styleFrom(primary: Colors.redAccent[100]),
-              )
+              ListView.builder(
+                  physics: const ScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: listOfFields.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Checkbox(
+                          value: value,
+                          onChanged: (value) {},
+                        ),
+                        Flexible(
+                          child: TextFormField(
+                            autofocus: true,
+                            textInputAction: TextInputAction.newline,
+                            onFieldSubmitted: (v) {
+                              addNewField();
+                            },
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  }),
             ],
           ),
         ),
@@ -80,9 +115,7 @@ class _BodyState extends State<Body> {
       initialDatePickerMode: DatePickerMode.day,
     );
     if (picked != null && picked != selectedDate) {
-      setState(() {
-        selectedDate = picked;
-      });
+      selectedDateMethod(picked);
     }
   }
 }
