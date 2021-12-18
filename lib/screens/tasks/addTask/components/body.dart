@@ -11,6 +11,8 @@ class Body extends StatefulWidget {
     required this.selectedDateMethod,
     required this.listOfFields,
     required this.addNewField,
+    required this.controllers,
+    required this.isChecked,
   }) : super(key: key);
 
   final TextEditingController title;
@@ -18,6 +20,8 @@ class Body extends StatefulWidget {
   final DateTime selectedDate;
   final void Function(DateTime? value) selectedDateMethod;
   final List listOfFields;
+  final List controllers;
+  final List isChecked;
 
   final void Function() addNewField;
   @override
@@ -32,9 +36,11 @@ class _BodyState extends State<Body> {
       widget.selectedDateMethod;
   void Function() get addNewField => widget.addNewField;
   List get listOfFields => widget.listOfFields;
+  List get controllers => widget.controllers;
+  List get isChecked => widget.isChecked;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
+  TextEditingController myController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     bool value = false;
@@ -71,33 +77,48 @@ class _BodyState extends State<Body> {
                 controller: description,
               ),
               const SizedBox(height: 20),
+              if (listOfFields.isNotEmpty)
+                Text(
+                    '${isChecked.where((check) => check == true).length}/${listOfFields.length}'),
               ListView.builder(
-                  physics: const ScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: listOfFields.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Checkbox(
-                          value: value,
-                          onChanged: (value) {},
-                        ),
-                        Flexible(
-                          child: TextFormField(
-                            autofocus: true,
-                            textInputAction: TextInputAction.newline,
-                            onFieldSubmitted: (v) {
-                              addNewField();
+                physics: const ScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: listOfFields.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Checkbox(
+                        onChanged: (checked) {
+                          setState(
+                            () {
+                              isChecked[index] = checked;
                             },
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
-                            ),
+                          );
+                        },
+                        value: isChecked[index],
+                      ),
+                      Flexible(
+                        child: TextFormField(
+                          controller: controllers[index],
+                          autofocus: true,
+                          textInputAction: TextInputAction.newline,
+                          style: TextStyle(
+                              decoration: isChecked[index] == true
+                                  ? TextDecoration.lineThrough
+                                  : null),
+                          onFieldSubmitted: (v) {
+                            addNewField();
+                          },
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
                           ),
                         ),
-                      ],
-                    );
-                  }),
+                      ),
+                    ],
+                  );
+                },
+              ),
             ],
           ),
         ),

@@ -16,12 +16,11 @@ class _AddTaskState extends State<AddTask> {
   CollectionReference ref = FirebaseFirestore.instance.collection('notes');
   DateTime selectedDate = DateTime.now();
   List listOfFields = <Widget>[];
-
+  List controllers = <TextEditingController>[];
+  List isChecked = <bool>[];
   @override
   Widget build(BuildContext context) {
-    listOfFields.forEach((element) {
-      print(element);
-    });
+    print(controllers.length);
     return Scaffold(
         appBar: AppBar(
           actions: [
@@ -39,6 +38,8 @@ class _AddTaskState extends State<AddTask> {
           description: description,
           listOfFields: listOfFields,
           addNewField: addNewField,
+          controllers: controllers,
+          isChecked: isChecked,
         ),
         bottomNavigationBar: Row(
           children: [
@@ -68,6 +69,8 @@ class _AddTaskState extends State<AddTask> {
   void addNewField() {
     setState(() {
       listOfFields.add(TextFormField());
+      controllers.add(TextEditingController());
+      isChecked.add(false);
     });
   }
 }
