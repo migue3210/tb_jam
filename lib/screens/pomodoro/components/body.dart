@@ -12,6 +12,7 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
+  bool wasStarted = false;
   int _seconds = 0;
   int _minutes = 25;
   Timer? _timer;
@@ -46,7 +47,7 @@ class _BodyState extends State<Body> {
             _minutes--;
           } else {
             _timer!.cancel();
-            print("Timer Complete");
+            // print("Timer Complete");
           }
         }
       });
@@ -55,33 +56,36 @@ class _BodyState extends State<Body> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(
-          "${f.format(_minutes)}:${f.format(_seconds)}",
-          style: GoogleFonts.roboto(fontSize: 40, fontWeight: FontWeight.bold),
-        ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                _startTimer();
-              },
-              child: const Text('Start'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                _stopTimer();
-              },
-              child: const Text('finish'),
-            ),
-          ],
-        ),
-      ],
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Text(
+            "${f.format(_minutes)}:${f.format(_seconds)}",
+            style:
+                GoogleFonts.roboto(fontSize: 40, fontWeight: FontWeight.bold),
+          ),
+          wasStarted == false
+              ? ElevatedButton(
+                  onPressed: () {
+                    _startTimer();
+                    setState(() {
+                      wasStarted = true;
+                    });
+                  },
+                  child: const Text('Start'),
+                )
+              : ElevatedButton(
+                  onPressed: () {
+                    _stopTimer();
+                    setState(() {
+                      wasStarted = false;
+                    });
+                  },
+                  child: const Text('finish'),
+                ),
+        ],
+      ),
     );
   }
 }

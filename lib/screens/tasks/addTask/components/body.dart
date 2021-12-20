@@ -13,16 +13,20 @@ class Body extends StatefulWidget {
     required this.addNewField,
     required this.controllers,
     required this.isChecked,
+    required this.myData,
   }) : super(key: key);
 
   final TextEditingController title;
   final TextEditingController description;
+
   final DateTime selectedDate;
-  final void Function(DateTime? value) selectedDateMethod;
+
   final List listOfFields;
   final List controllers;
   final List isChecked;
+  final List<Map<String, dynamic>> myData;
 
+  final void Function(DateTime? value) selectedDateMethod;
   final void Function() addNewField;
   @override
   State<Body> createState() => _BodyState();
@@ -32,18 +36,20 @@ class _BodyState extends State<Body> {
   TextEditingController get title => widget.title;
   TextEditingController get description => widget.description;
   DateTime get selectedDate => widget.selectedDate;
-  void Function(DateTime? value) get selectedDateMethod =>
-      widget.selectedDateMethod;
-  void Function() get addNewField => widget.addNewField;
+
   List get listOfFields => widget.listOfFields;
   List get controllers => widget.controllers;
   List get isChecked => widget.isChecked;
+  List<Map<String, dynamic>> get myData => widget.myData;
+
+  void Function(DateTime? value) get selectedDateMethod =>
+      widget.selectedDateMethod;
+  void Function() get addNewField => widget.addNewField;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  TextEditingController myController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    bool value = false;
     return Form(
       key: _formKey,
       child: Padding(
@@ -85,6 +91,14 @@ class _BodyState extends State<Body> {
                 shrinkWrap: true,
                 itemCount: listOfFields.length,
                 itemBuilder: (BuildContext context, int index) {
+                  // Map<String, dynamic> si = {
+                  //   'task': controllers[index].text,
+                  //   'wasFinished': isChecked[index]
+                  // };
+                  // if (controllers[index].text.isNotEmpty) {
+                  //   myData.add(si);
+                  // }
+
                   return Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -109,6 +123,24 @@ class _BodyState extends State<Body> {
                                   : null),
                           onFieldSubmitted: (v) {
                             addNewField();
+                            setState(() {
+                              isChecked[index];
+                              controllers[index].text;
+                              Map<String, dynamic> si = {
+                                'task': controllers[index].text,
+                                'wasFinished': isChecked[index]
+                              };
+
+                              // myData[index].update(
+                              //   si[2],
+                              //   (value) {
+                              //     value = isChecked[index];
+                              //     return value;
+                              //   },
+                              // );
+
+                              myData.add(si);
+                            });
                           },
                           decoration: const InputDecoration(
                             border: InputBorder.none,

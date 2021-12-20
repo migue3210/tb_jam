@@ -33,7 +33,10 @@ class _BodyState extends State<Body> {
           child: ScrollConfiguration(
             behavior: MyBehavior(),
             child: StreamBuilder(
-                stream: ref.orderBy('date', descending: true).snapshots(),
+                stream: ref
+                    .where('isDeleted', isEqualTo: false)
+                    .orderBy('date')
+                    .snapshots(),
                 builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (snapshot.hasError) {
                     return const Text('Algo ha salido mal');
@@ -47,10 +50,10 @@ class _BodyState extends State<Body> {
                     shrinkWrap: true,
                     itemCount: snapshot.hasData ? data.size : 0,
                     itemBuilder: (BuildContext context, int index) {
-                      if (snapshot.hasData) {
-                        return cardMethod(data, index);
+                      if (!snapshot.hasData) {
+                        return const Text('No hay tareas pendientes');
                       }
-                      return const Text('No hay tareas pendientes');
+                      return cardMethod(data, index);
                     },
                   );
                 }),
@@ -64,52 +67,61 @@ class _BodyState extends State<Body> {
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: 28,
-        vertical: 2,
+        vertical: 6,
       ),
       child: ((data.docs[index]['date'].toDate() == selectedDate ||
+              DateFormat("dd-MM-yyyy").format(
+                    (selectedDate),
+                  ) ==
                   DateFormat("dd-MM-yyyy").format(
-                        (selectedDate),
-                      ) ==
-                      DateFormat("dd-MM-yyyy").format(
-                        (data.docs[index]['date']).toDate(),
-                      )) &&
-              data.docs[index]['isDeleted'] != true)
-          ? Column(
-              children: [
-                ListTile(
-                  contentPadding: const EdgeInsets.all(0),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            EditTask(docToEdit: data.docs[index]),
-                      ),
-                    );
-                  },
-                  title: Text(data.docs[index]['title']),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+                    (data.docs[index]['date']).toDate(),
+                  )))
+          ? Container(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(
+                    color: Colors.black12,
+                    style: BorderStyle.solid,
+                    width: 1.5,
+                  ),
+                  borderRadius: BorderRadius.circular(12)),
+              child: ListTile(
+                contentPadding: const EdgeInsets.all(0),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          EditTask(docToEdit: data.docs[index]),
+                    ),
+                  );
+                },
+                title: data.docs[index]['title'].isNotEmpty
+                    ? Text(data.docs[index]['title'])
+                    : const SizedBox(),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (data.docs[index]['description'].isNotEmpty)
                       Text(
                         data.docs[index]['description'],
                         maxLines: 6,
                         overflow: TextOverflow.fade,
                       ),
-                      Text(
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: Text(
                         DateFormat("dd-MM-yyyy").format(
                           (data.docs[index]['date']).toDate(),
                         ),
-                      )
-                    ],
-                  ),
+                      ),
+                    )
+                  ],
                 ),
-                const Divider(
-                  thickness: 1.0,
-                )
-              ],
+              ),
             )
-          : Container(),
+          : null,
     );
   }
 }

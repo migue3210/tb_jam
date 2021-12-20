@@ -5,14 +5,16 @@ import 'package:tb_jam/configurations/constants.dart';
 import 'package:tb_jam/screens/tasks/editTask/edit_task.dart';
 
 class Body extends StatefulWidget {
-  const Body({Key? key}) : super(key: key);
+  const Body({Key? key, required this.ref}) : super(key: key);
+
+  final CollectionReference ref;
 
   @override
   State<Body> createState() => _BodyState();
 }
 
 class _BodyState extends State<Body> {
-  final ref = FirebaseFirestore.instance.collection('notes');
+  CollectionReference get ref => widget.ref;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +24,10 @@ class _BodyState extends State<Body> {
           child: ScrollConfiguration(
             behavior: MyBehavior(),
             child: StreamBuilder(
-                stream: ref.orderBy('date', descending: true).snapshots(),
+                stream: ref
+                    .where('isDeleted', isEqualTo: true)
+                    .orderBy('date', descending: true)
+                    .snapshots(),
                 builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (snapshot.hasError) {
                     return const Center(child: Text('Algo ha salido mal'));
@@ -55,47 +60,53 @@ class _BodyState extends State<Body> {
 
   Padding cardMethod(QuerySnapshot<Object?> data, int index) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 28,
-        vertical: 2,
-      ),
-      child: (data.docs[index]['isDeleted'] == true)
-          ? Column(
-              children: [
-                ListTile(
-                  contentPadding: const EdgeInsets.all(0),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            EditTask(docToEdit: data.docs[index]),
-                      ),
-                    );
-                  },
-                  title: Text(data.docs[index]['title']),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        data.docs[index]['description'],
-                        maxLines: 6,
-                        overflow: TextOverflow.fade,
-                      ),
-                      Text(
-                        DateFormat("dd-MM-yyyy").format(
-                          (data.docs[index]['date']).toDate(),
-                        ),
-                      )
-                    ],
-                  ),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 28,
+          vertical: 6,
+        ),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+          decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(
+                color: Colors.black12,
+                style: BorderStyle.solid,
+                width: 1.5,
+              ),
+              borderRadius: BorderRadius.circular(12)),
+          child: ListTile(
+            contentPadding: const EdgeInsets.all(0),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EditTask(docToEdit: data.docs[index]),
                 ),
-                const Divider(
-                  thickness: 1.0,
+              );
+            },
+            title: data.docs[index]['title'].isNotEmpty
+                ? Text(data.docs[index]['title'])
+                : const SizedBox(),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (data.docs[index]['description'].isNotEmpty)
+                  Text(
+                    data.docs[index]['description'],
+                    maxLines: 6,
+                    overflow: TextOverflow.fade,
+                  ),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: Text(
+                    DateFormat("dd-MM-yyyy").format(
+                      (data.docs[index]['date']).toDate(),
+                    ),
+                  ),
                 )
               ],
-            )
-          : Container(),
-    );
+            ),
+          ),
+        ));
   }
 }

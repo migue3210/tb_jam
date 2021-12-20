@@ -18,9 +18,10 @@ class _AddTaskState extends State<AddTask> {
   List listOfFields = <Widget>[];
   List controllers = <TextEditingController>[];
   List isChecked = <bool>[];
+  List<Map<String, dynamic>> myData = [];
+
   @override
   Widget build(BuildContext context) {
-    print(controllers.length);
     return Scaffold(
         appBar: AppBar(
           actions: [
@@ -29,17 +30,18 @@ class _AddTaskState extends State<AddTask> {
         ),
         body: Body(
           title: title,
+          description: description,
+          selectedDate: selectedDate,
+          listOfFields: listOfFields,
+          controllers: controllers,
+          isChecked: isChecked,
+          myData: myData,
           selectedDateMethod: (DateTime? value) {
             setState(() {
               selectedDate = value!;
             });
           },
-          selectedDate: selectedDate,
-          description: description,
-          listOfFields: listOfFields,
           addNewField: addNewField,
-          controllers: controllers,
-          isChecked: isChecked,
         ),
         bottomNavigationBar: Row(
           children: [
@@ -63,6 +65,7 @@ class _AddTaskState extends State<AddTask> {
       'description': description.text,
       'createdAt': DateTime.now(),
       'isDeleted': false,
+      'tasks': myData,
     }).whenComplete(() => Navigator.pop(context));
   }
 
