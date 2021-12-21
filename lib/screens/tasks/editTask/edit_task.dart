@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'components/body.dart';
@@ -15,7 +16,10 @@ class EditTask extends StatefulWidget {
 class _EditTaskState extends State<EditTask> {
   TextEditingController title = TextEditingController();
   TextEditingController description = TextEditingController();
-  CollectionReference ref = FirebaseFirestore.instance.collection('notes');
+  CollectionReference ref = FirebaseFirestore.instance
+      .collection('users')
+      .doc((FirebaseAuth.instance.currentUser!).uid)
+      .collection('notes');
   DateTime selectedDate = DateTime.now();
   List listOfFields = <Widget>[];
   List controllers = <TextEditingController>[];

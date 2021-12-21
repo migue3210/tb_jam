@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:calendar_timeline/calendar_timeline.dart';
 import 'package:intl/intl.dart';
@@ -22,7 +23,10 @@ class _BodyState extends State<Body> {
   void Function(DateTime? value) get methodSelectData =>
       widget.methodSelectData;
 
-  final ref = FirebaseFirestore.instance.collection('notes');
+  final ref = FirebaseFirestore.instance
+      .collection('users')
+      .doc((FirebaseAuth.instance.currentUser!).uid)
+      .collection('notes');
 
   @override
   Widget build(BuildContext context) {
@@ -158,7 +162,7 @@ class Calendar extends StatelessWidget {
             dayColor: Colors.teal[200],
             dayNameColor: Colors.white,
             activeDayColor: Colors.white,
-            activeBackgroundDayColor: Colors.redAccent[100],
+            activeBackgroundDayColor: kPrimaryColor,
             dotsColor: const Color(0xFF333A47),
           ),
           const SizedBox(height: 25)

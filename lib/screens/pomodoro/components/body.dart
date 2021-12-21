@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:tb_jam/configurations/constants.dart';
 
 class Body extends StatefulWidget {
   const Body({Key? key}) : super(key: key);
@@ -67,6 +68,7 @@ class _BodyState extends State<Body> {
           ),
           wasStarted == false
               ? ElevatedButton(
+                  style: ElevatedButton.styleFrom(primary: kPrimaryColor),
                   onPressed: () {
                     _startTimer();
                     setState(() {
@@ -76,6 +78,7 @@ class _BodyState extends State<Body> {
                   child: const Text('Start'),
                 )
               : ElevatedButton(
+                  style: ElevatedButton.styleFrom(primary: kPrimaryColor),
                   onPressed: () {
                     _stopTimer();
                     setState(() {

@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:tb_jam/screens/notes/notes_screen.dart';
 import 'package:tb_jam/utils/authentication.dart';
 
+import '../../configurations/constants.dart';
+
 class SignInScreen extends StatefulWidget {
   const SignInScreen({Key? key}) : super(key: key);
 
@@ -26,7 +28,7 @@ class _SignInScreenState extends State<SignInScreen> {
             }
             return const CircularProgressIndicator(
               valueColor: AlwaysStoppedAnimation<Color>(
-                Colors.orange,
+                kPrimaryColor,
               ),
             );
           },
@@ -54,7 +56,7 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
           )
         : ElevatedButton(
             style: ElevatedButton.styleFrom(
-                primary: Colors.redAccent[100],
+                primary: kPrimaryColor,
                 textStyle: const TextStyle(color: Colors.white)),
             onPressed: () async {
               setState(() {
@@ -79,7 +81,7 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
             child: const Padding(
               padding: EdgeInsets.symmetric(vertical: 10),
               child: Text(
-                'Sign in with Google',
+                'Entrar con Google',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w600,

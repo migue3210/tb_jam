@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tb_jam/configurations/constants.dart';
 
@@ -16,11 +17,17 @@ class Body extends StatefulWidget {
 
 class _BodyState extends State<Body> {
   TextEditingController label = TextEditingController();
-  CollectionReference ref = FirebaseFirestore.instance.collection('labels');
-  List listOfLabels = <Widget>[];
-  List controllers = <TextEditingController>[];
+  TextEditingController editLabel = TextEditingController();
+  CollectionReference ref = FirebaseFirestore.instance
+      .collection('users')
+      .doc((FirebaseAuth.instance.currentUser!).uid)
+      .collection('labels');
+  // List listOfLabels = <Widget>[];
+  // List controllers = <TextEditingController>[];
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  bool isEditing = false;
 
   @override
   Widget build(BuildContext context) {
@@ -42,19 +49,18 @@ class _BodyState extends State<Body> {
                   }
                 },
                 icon: IconButton(
-                    onPressed: addDataToDB, icon: const Icon(Icons.check)),
+                    focusColor: kPrimaryColor,
+                    onPressed: () {
+                      addDataToDB();
+                      label.clear();
+                    },
+                    icon: const Icon(
+                      Icons.check,
+                    )),
               ),
               StreamBuilder(
                 stream: ref.orderBy('createdAt', descending: true).snapshots(),
                 builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                  @override
-                  void initState() {
-                    label = TextEditingController(
-                        text: widget.docToEdit!.get('title'));
-
-                    super.initState();
-                  }
-
                   if (snapshot.hasError) {
                     return const Center(child: Text('Algo ha salido mal'));
                   } else if (snapshot.connectionState ==
@@ -80,13 +86,27 @@ class _BodyState extends State<Body> {
                           //     color: Colors.blue,
                           //   ),
                           // ),
-                          Text(data.docs[index]['label']),
+                          isEditing == false
+                              ? Text(data.docs[index]['label'])
+                              : Flexible(
+                                  child: CustomTextFormField(
+                                    controller: editLabel,
+                                  ),
+                                ),
                           const Spacer(),
+
                           IconButton(
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.edit,
-                              color: Colors.blue,
+                            onPressed: () {
+                              // setState(() {
+                              //   isEditing = !isEditing;
+                              // });
+                              // if (isEditing == true) {
+                              //   editDataToDB(data, index);
+                              // }
+                            },
+                            icon: Icon(
+                              isEditing == false ? Icons.edit : Icons.check,
+                              color: kPrimaryColor,
                             ),
                           ),
                         ],
@@ -107,6 +127,12 @@ class _BodyState extends State<Body> {
       'label': label.text,
       'createdAt': DateTime.now(),
       // 'isDeleted': false,
+    });
+  }
+
+  void editDataToDB(QuerySnapshot<Object?> data, int index) {
+    data.docs[index].reference.update({
+      'label': editLabel.text,
     });
   }
 }

@@ -13,3 +13,5 @@ class MyBehavior extends ScrollBehavior {
     return child;
   }
 }
+
+const kPrimaryColor = Color(0xff9976ff);

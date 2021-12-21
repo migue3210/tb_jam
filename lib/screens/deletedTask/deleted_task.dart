@@ -1,5 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:tb_jam/configurations/constants.dart';
 import 'package:tb_jam/drawer/drawer.dart';
 
 import 'components/body.dart';
@@ -13,7 +16,10 @@ class DeletedTask extends StatefulWidget {
 
 class _DeletedTaskState extends State<DeletedTask> {
   DateTime selectedDate = DateTime.now();
-  CollectionReference ref = FirebaseFirestore.instance.collection('notes');
+  CollectionReference ref = FirebaseFirestore.instance
+      .collection('users')
+      .doc((FirebaseAuth.instance.currentUser!).uid)
+      .collection('notes');
 
   @override
   Widget build(BuildContext context) {
@@ -27,15 +33,19 @@ class _DeletedTaskState extends State<DeletedTask> {
   AppBar appBarMethod(BuildContext context) {
     return AppBar(
       centerTitle: true,
-      title: const Text(
+      title: Text(
         'Papelera',
+        style: GoogleFonts.roboto(fontWeight: FontWeight.bold),
       ),
       actions: [
         TextButton(
             onPressed: () {
               showAlertDialog(context);
             },
-            child: const Text('vaciar'))
+            child: const Text(
+              'vaciar',
+              style: TextStyle(color: kPrimaryColor),
+            ))
       ],
     );
   }

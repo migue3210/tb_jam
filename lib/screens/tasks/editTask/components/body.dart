@@ -77,7 +77,7 @@ class _BodyState extends State<Body> {
                   hintStyle: const TextStyle(fontWeight: FontWeight.w600),
                   suffixIcon: const Icon(
                     Icons.edit,
-                    color: Colors.blue,
+                    color: kPrimaryColor,
                   ),
                 ),
               ),

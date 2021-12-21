@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'T&B JAM',
+        title: 'One Hand App',
         theme: theme(context),
         localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,

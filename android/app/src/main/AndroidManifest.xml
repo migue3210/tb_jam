@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.tb_jam">
    <application
-        android:label="tb_jam"
+        android:label="One Hand App"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

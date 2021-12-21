@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:tb_jam/configurations/constants.dart';
 import 'package:tb_jam/drawer/drawer.dart';
 import 'package:tb_jam/screens/tasks/addTask/add_task.dart';
 
@@ -12,7 +14,10 @@ class NotesScreen extends StatelessWidget {
     return Scaffold(
       drawer: const DrawerMenu(),
       appBar: AppBar(
-        title: const Text('Notas'),
+        title: Text(
+          'Notas',
+          style: GoogleFonts.roboto(fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
       ),
       body: const Body(),
@@ -26,7 +31,7 @@ class NotesScreen extends StatelessWidget {
           );
         },
         child: const Icon(Icons.add),
-        backgroundColor: Colors.redAccent[100],
+        backgroundColor: kPrimaryColor,
       ),
     );
   }

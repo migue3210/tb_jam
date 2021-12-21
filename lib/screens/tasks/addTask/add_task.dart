@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'components/body.dart';
@@ -13,7 +14,12 @@ class AddTask extends StatefulWidget {
 class _AddTaskState extends State<AddTask> {
   final TextEditingController title = TextEditingController();
   final TextEditingController description = TextEditingController();
-  CollectionReference ref = FirebaseFirestore.instance.collection('notes');
+
+  final ref = FirebaseFirestore.instance
+      .collection('users')
+      .doc((FirebaseAuth.instance.currentUser!).uid)
+      .collection('notes');
+
   DateTime selectedDate = DateTime.now();
   List listOfFields = <Widget>[];
   List controllers = <TextEditingController>[];
@@ -22,6 +28,7 @@ class _AddTaskState extends State<AddTask> {
 
   @override
   Widget build(BuildContext context) {
+    print(myData);
     return Scaffold(
         appBar: AppBar(
           actions: [
@@ -59,14 +66,18 @@ class _AddTaskState extends State<AddTask> {
   }
 
   void addDataToDB() {
-    ref.add({
-      'date': selectedDate,
-      'title': title.text,
-      'description': description.text,
-      'createdAt': DateTime.now(),
-      'isDeleted': false,
-      'tasks': myData,
-    }).whenComplete(() => Navigator.pop(context));
+    if (title.text.isNotEmpty || description.text.isNotEmpty) {
+      ref.add({
+        'date': selectedDate,
+        'title': title.text,
+        'description': description.text,
+        'createdAt': DateTime.now(),
+        'isDeleted': false,
+        'tasks': myData,
+      }).whenComplete(() => Navigator.pop(context));
+    } else {
+      Navigator.pop(context);
+    }
   }
 
   void addNewField() {

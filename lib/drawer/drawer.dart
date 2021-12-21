@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tb_jam/configurations/constants.dart';
 import 'package:tb_jam/screens/deletedTask/deleted_task.dart';
 import 'package:tb_jam/screens/labels/labels_screen.dart';
 import 'package:tb_jam/screens/notes/notes_screen.dart';
@@ -43,11 +44,20 @@ class _DrawerMenuState extends State<DrawerMenu> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'MyAppName',
-                style: GoogleFonts.roboto(
-                    fontSize: 25, fontWeight: FontWeight.bold),
-              ),
+              Row(children: [
+                Text(
+                  'One',
+                  style: GoogleFonts.roboto(
+                      fontSize: 30, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  'Hand',
+                  style: GoogleFonts.roboto(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: kPrimaryColor),
+                ),
+              ]),
               const SizedBox(height: 25),
               ListView.separated(
                 shrinkWrap: true,
@@ -60,7 +70,10 @@ class _DrawerMenuState extends State<DrawerMenu> {
                   return ListTile(
                     contentPadding: const EdgeInsets.all(0),
                     selected: _currentSelected == index ? true : false,
-                    title: Text(view.title),
+                    title: Text(
+                      view.title,
+                      style: GoogleFonts.roboto(fontWeight: FontWeight.w500),
+                    ),
                     leading: Icon(view.icon),
                     onTap: () {
                       Navigator.push(

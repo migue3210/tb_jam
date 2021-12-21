@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:tb_jam/configurations/constants.dart';
 import 'package:tb_jam/drawer/drawer.dart';
@@ -35,7 +36,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
           );
         },
         child: const Icon(Icons.add),
-        backgroundColor: Colors.redAccent[100],
+        backgroundColor: kPrimaryColor,
       ),
     );
   }
@@ -47,7 +48,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
       centerTitle: true,
       title: Text(
         DateFormat.MMMM("es").format(selectedDate).capitalizeIt(),
-        style: const TextStyle(color: Colors.black),
+        style: GoogleFonts.roboto(fontWeight: FontWeight.bold),
       ),
       actions: [
         IconButton(

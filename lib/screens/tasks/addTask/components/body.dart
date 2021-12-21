@@ -74,7 +74,7 @@ class _BodyState extends State<Body> {
                   hintStyle: const TextStyle(fontWeight: FontWeight.w600),
                   suffixIcon: const Icon(
                     Icons.edit,
-                    color: Colors.blue,
+                    color: kPrimaryColor,
                   ),
                 ),
               ),
@@ -116,31 +116,23 @@ class _BodyState extends State<Body> {
                         child: TextFormField(
                           controller: controllers[index],
                           autofocus: true,
-                          textInputAction: TextInputAction.newline,
                           style: TextStyle(
                               decoration: isChecked[index] == true
                                   ? TextDecoration.lineThrough
                                   : null),
                           onFieldSubmitted: (v) {
                             addNewField();
-                            setState(() {
-                              isChecked[index];
-                              controllers[index].text;
-                              Map<String, dynamic> si = {
-                                'task': controllers[index].text,
-                                'wasFinished': isChecked[index]
-                              };
+                            Map<String, dynamic> si = {
+                              'task': controllers[index].text,
+                              'wasFinished': isChecked[index]
+                            };
 
-                              // myData[index].update(
-                              //   si[2],
-                              //   (value) {
-                              //     value = isChecked[index];
-                              //     return value;
-                              //   },
-                              // );
+                            // myData.add(si);
+                            myData.toSet().add(si);
+                            // print(myData.toList());
 
-                              myData.add(si);
-                            });
+                            // setState(() {
+                            // });
                           },
                           decoration: const InputDecoration(
                             border: InputBorder.none,
