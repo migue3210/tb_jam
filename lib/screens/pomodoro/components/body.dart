@@ -1,8 +1,6 @@
-import 'dart:async';
-
+import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import 'package:tb_jam/configurations/constants.dart';
 
 class Body extends StatefulWidget {
@@ -14,46 +12,8 @@ class Body extends StatefulWidget {
 
 class _BodyState extends State<Body> {
   bool wasStarted = false;
-  int _seconds = 0;
-  int _minutes = 25;
-  Timer? _timer;
-  var f = NumberFormat("00");
 
-  void _stopTimer() {
-    _timer!.cancel();
-    setState(() {
-      _seconds = 0;
-      _minutes = 25;
-    });
-  }
-
-  void _startTimer() {
-    if (_timer != null) {
-      _timer!.cancel();
-    }
-    if (_minutes > 0) {
-      _seconds = _minutes * 60;
-    }
-    if (_seconds > 60) {
-      _minutes = (_seconds / 60).floor();
-      _seconds -= (_minutes * 60);
-    }
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      setState(() {
-        if (_seconds > 0) {
-          _seconds--;
-        } else {
-          if (_minutes > 0) {
-            _seconds = 59;
-            _minutes--;
-          } else {
-            _timer!.cancel();
-            // print("Timer Complete");
-          }
-        }
-      });
-    });
-  }
+  final CountDownController _controller = CountDownController();
 
   @override
   Widget build(BuildContext context) {
@@ -61,31 +21,65 @@ class _BodyState extends State<Body> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Text(
-            "${f.format(_minutes)}:${f.format(_seconds)}",
-            style:
-                GoogleFonts.roboto(fontSize: 40, fontWeight: FontWeight.bold),
+          CircularCountDownTimer(
+            duration: 1500,
+            initialDuration: 0,
+            controller: _controller,
+            width: MediaQuery.of(context).size.width / 2,
+            height: MediaQuery.of(context).size.height / 2,
+            ringColor: Colors.grey[300] as Color,
+            // fillColor: kPrimaryColor,
+            // backgroundColor: Colors.white,
+            fillColor: Colors.purpleAccent[100] as Color,
+            backgroundColor: Colors.purple[500],
+            strokeWidth: 20.0,
+            strokeCap: StrokeCap.round,
+            textStyle: const TextStyle(
+                fontSize: 33.0,
+                // color: Colors.black,
+                color: Colors.white,
+                fontWeight: FontWeight.bold),
+            textFormat: CountdownTextFormat.MM_SS,
+            isReverse: true,
+            isTimerTextShown: true,
+            autoStart: false,
           ),
           wasStarted == false
               ? ElevatedButton(
                   style: ElevatedButton.styleFrom(primary: kPrimaryColor),
                   onPressed: () {
-                    _startTimer();
+                    // _startTimer();
+                    _controller.start();
+
                     setState(() {
                       wasStarted = true;
                     });
                   },
-                  child: const Text('Start'),
+                  child: Text(
+                    'Start',
+                    style: GoogleFonts.roboto(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 )
               : ElevatedButton(
                   style: ElevatedButton.styleFrom(primary: kPrimaryColor),
                   onPressed: () {
-                    _stopTimer();
+                    // _stopTimer();
+                    _controller.restart();
+                    _controller.pause();
                     setState(() {
                       wasStarted = false;
                     });
                   },
-                  child: const Text('finish'),
+                  child: Text(
+                    'finish',
+                    style: GoogleFonts.roboto(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
         ],
       ),

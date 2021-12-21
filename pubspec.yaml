@@ -26,6 +26,7 @@ dependencies:
   calendar_timeline: ^1.0.4
   google_sign_in: ^5.1.0
   provider:
+  circular_countdown_timer: ^0.2.0
 
 dev_dependencies:
   flutter_test:
