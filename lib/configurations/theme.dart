@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tb_jam/configurations/constants.dart';
 
 ThemeData theme(context) {
   return ThemeData(
@@ -7,6 +8,7 @@ ThemeData theme(context) {
     textTheme: textTheme(),
     appBarTheme: appBarTheme(context),
     visualDensity: VisualDensity.adaptivePlatformDensity,
+    listTileTheme: const ListTileThemeData(selectedColor: kPrimaryColor),
   );
 }
 
