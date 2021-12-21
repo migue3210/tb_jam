@@ -15,15 +15,17 @@ class _AddTaskState extends State<AddTask> {
   final TextEditingController description = TextEditingController();
   CollectionReference ref = FirebaseFirestore.instance.collection('notes');
   DateTime selectedDate = DateTime.now();
-  List listOfFields = <Widget>[];
+  List<Name>? listOfFields = <Name>[];
+
+  Name? checkMap = Name();
 
   @override
   Widget build(BuildContext context) {
-    listOfFields.forEach((element) {
-      print(element);
-    });
     return Scaffold(
         appBar: AppBar(
+          title: Text(
+            listOfFields!.length.toString(),
+          ),
           actions: [
             IconButton(onPressed: addDataToDB, icon: const Icon(Icons.check))
           ],
@@ -39,6 +41,13 @@ class _AddTaskState extends State<AddTask> {
           description: description,
           listOfFields: listOfFields,
           addNewField: addNewField,
+          checkMapMethod: (Name? value) {
+            checkMap = value!;
+          },
+          checkMap: checkMap,
+          onChanged: (Select? select) => setState(() {
+            listOfFields?[select!.index!].title = select.note;
+          }),
         ),
         bottomNavigationBar: Row(
           children: [
@@ -67,7 +76,21 @@ class _AddTaskState extends State<AddTask> {
 
   void addNewField() {
     setState(() {
-      listOfFields.add(TextFormField());
+      listOfFields?.add(checkMap!);
     });
   }
+}
+
+class Name {
+  String? title;
+  bool? boolean;
+
+  Name({this.title, this.boolean});
+}
+
+class Select {
+  String? note;
+  int? index;
+
+  Select({this.note, this.index});
 }
