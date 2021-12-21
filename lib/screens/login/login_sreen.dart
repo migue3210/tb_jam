@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:tb_jam/screens/notes/notes_screen.dart';
 import 'package:tb_jam/utils/authentication.dart';
 
@@ -16,23 +17,46 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: FutureBuilder(
-          future: Authentication.signInWithGoogle(context: context),
-          builder: (context, snapshot) {
-            /* if (!snapshot.hasError) {
-              return const Text('Error initializing Firebase');
-            } else */
-            if (snapshot.connectionState == ConnectionState.done) {
-              return const GoogleSignInButton();
-            }
-            return const CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(
-                kPrimaryColor,
-              ),
-            );
-          },
-        ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            'Bienvenido a',
+            style: GoogleFonts.roboto(fontSize: 30),
+          ),
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Text(
+              'One',
+              style:
+                  GoogleFonts.roboto(fontSize: 50, fontWeight: FontWeight.bold),
+            ),
+            Text(
+              'Hand',
+              style: GoogleFonts.roboto(
+                  fontSize: 50,
+                  fontWeight: FontWeight.bold,
+                  color: kPrimaryColor),
+            ),
+          ]),
+          const SizedBox(height: 60),
+          FutureBuilder(
+            future: Authentication.signInWithGoogle(context: context),
+            builder: (context, snapshot) {
+              /* if (!snapshot.hasError) {
+                return const Text('Error initializing Firebase');
+              } else */
+              if (snapshot.connectionState == ConnectionState.done) {
+                return const GoogleSignInButton();
+              }
+              return const CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  kPrimaryColor,
+                ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }
@@ -78,11 +102,11 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
                 );
               }
             },
-            child: const Padding(
-              padding: EdgeInsets.symmetric(vertical: 10),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
               child: Text(
                 'Entrar con Google',
-                style: TextStyle(
+                style: GoogleFonts.roboto(
                   fontSize: 20,
                   fontWeight: FontWeight.w600,
                 ),
