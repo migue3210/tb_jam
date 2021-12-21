@@ -56,7 +56,7 @@ class _BodyState extends State<Body> {
                     });
                   },
                   child: Text(
-                    'Start',
+                    'Empezar',
                     style: GoogleFonts.roboto(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -74,7 +74,7 @@ class _BodyState extends State<Body> {
                     });
                   },
                   child: Text(
-                    'finish',
+                    'Finalizar',
                     style: GoogleFonts.roboto(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
