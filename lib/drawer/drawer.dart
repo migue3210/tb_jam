@@ -68,7 +68,6 @@ class _DrawerMenuState extends State<DrawerMenu> {
                   Views view = views[index];
 
                   return ListTile(
-                    focusColor: kPrimaryColor,
                     contentPadding: const EdgeInsets.all(0),
                     selected: _currentSelected == index ? true : false,
                     title: Text(
